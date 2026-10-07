@@ -1,0 +1,111 @@
+//* ====================================================== *//
+//*  prueba.txt - Prueba del analizador lexico - Grupo 4    *//
+//*  Primera parte: tokens validos (no debe haber errores)  *//
+//*  Segunda parte: errores a proposito                     *//
+//* ====================================================== *//
+
+
+//* ============ PARTE 1: TOKENS VALIDOS ============ *//
+
+//* --- Palabras reservadas --- *//
+DECLARE.SECTION
+ENDDECLARE.SECTION
+PROGRAM.SECTION
+ENDPROGRAM.SECTION
+WHILE
+ENDWHILE
+WRITE
+IF
+ENDIF
+INTEGER
+FLOAT
+STRING
+PROMR
+
+//* --- Identificadores --- *//
+a
+x1
+contador
+Total2
+//* parecidos a reservadas, pero NO lo son (deben salir como ID) *//
+WHILEX
+IF2
+while
+promr
+
+//* --- Constantes enteras --- *//
+0
+7
+65535
+
+//* --- Constantes reales --- *//
+3.14
+0.0
+99.
+.5
+99999.99
+
+//* --- Constantes string --- *//
+""
+"hola"
+"hola mundo 123"
+"123456789012345678901234567890"
+
+//* --- Operadores aritmeticos --- *//
++ - * /
+
+//* --- Operadores logicos y de comparacion --- *//
+&& ||
+== !=
+< > <= >=
+
+//* --- Delimitadores y asignacion --- *//
+( ) { } [ ] ; , : ::=
+
+//* --- Comentarios (no deben generar ningun token) --- *//
+//* comentario simple *//
+//* comentario
+   de varias lineas *//
+//* externo //* anidado *// otra vez externo *//
+a //* comentario en medio de una linea *// b
+
+//* --- Espacios, tabuladores y lineas en blanco --- *//
+a	b      c
+
+
+//* --- TEMA DEL GRUPO: PROMR --- *//
+r ::= PROMR(x; <= [1, 2, 3]);
+r ::= PROMR(x; <= [10, 20, 30, 40, 50]);
+r ::= PROMR(x; <= [7]);
+r ::= PROMR(x; <= []);
+r ::= PROMR(x; <= [0, 65535, 5]);
+r ::= PROMR(x;<=[1,2,3]);
+resultado ::= PROMR(pivote; <=; [4, 8, 15, 16, 23, 42]);
+r ::= PROMR(
+    x;
+    <= [1,
+        2,
+        3]
+);
+
+
+//* ============ PARTE 2: ERRORES A PROPOSITO ============ *//
+
+//* --- Caracteres no validos (5 errores) --- *//
+@ # $ % ?
+
+//* --- Enteros fuera de rango, maximo 65535 (3 errores) --- *//
+65536
+99999
+99999999999
+
+//* --- Real fuera de rango, maximo 32 bits (1 error) --- *//
+1000000000000000000000000000000000000000.5
+
+//* --- String de mas de 30 caracteres (1 error) --- *//
+"1234567890123456789012345678901"
+
+//* --- Errores dentro de PROMR (2 errores) --- *//
+r ::= PROMR(x; <= [1, 70000, 3]);
+r ::= PROMR(x; <= [1, @, 3]);
+

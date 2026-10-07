@@ -1,0 +1,45 @@
+NOMBRE                             TOKEN     TIPO  VALOR                              LONG  
+a                                  ID              _                                  _     
+x1                                 ID              _                                  _     
+contador                           ID              _                                  _     
+Total2                             ID              _                                  _     
+WHILEX                             ID              _                                  _     
+IF2                                ID              _                                  _     
+while                              ID              _                                  _     
+promr                              ID              _                                  _     
+_0                                 CTE_E     _     0                                  _     
+_7                                 CTE_E     _     7                                  _     
+_65535                             CTE_E     _     65535                              _     
+_3.14                              CTE_F     _     3.14                               _     
+_0.0                               CTE_F     _     0.0                                _     
+_99.                               CTE_F     _     99.                                _     
+_.5                                CTE_F     _     .5                                 _     
+_99999.99                          CTE_F     _     99999.99                           _     
+_                                  CTE_STR   _                                        0     
+_hola                              CTE_STR   _     hola                               4     
+_hola mundo 123                    CTE_STR   _     hola mundo 123                     14    
+_123456789012345678901234567890    CTE_STR   _     123456789012345678901234567890     30    
+otra                               ID              _                                  _     
+vez                                ID              _                                  _     
+externo                            ID              _                                  _     
+b                                  ID              _                                  _     
+c                                  ID              _                                  _     
+r                                  ID              _                                  _     
+x                                  ID              _                                  _     
+_1                                 CTE_E     _     1                                  _     
+_2                                 CTE_E     _     2                                  _     
+_3                                 CTE_E     _     3                                  _     
+_10                                CTE_E     _     10                                 _     
+_20                                CTE_E     _     20                                 _     
+_30                                CTE_E     _     30                                 _     
+_40                                CTE_E     _     40                                 _     
+_50                                CTE_E     _     50                                 _     
+_5                                 CTE_E     _     5                                  _     
+resultado                          ID              _                                  _     
+pivote                             ID              _                                  _     
+_4                                 CTE_E     _     4                                  _     
+_8                                 CTE_E     _     8                                  _     
+_15                                CTE_E     _     15                                 _     
+_16                                CTE_E     _     16                                 _     
+_23                                CTE_E     _     23                                 _     
+_42                                CTE_E     _     42                                 _     
