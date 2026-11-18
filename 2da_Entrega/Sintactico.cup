@@ -1,0 +1,183 @@
+import java_cup.runtime.Symbol;
+
+/* ------------------------------------------------------------------ */
+/* Manejo de errores: se informan en la salida con linea y columna     */
+/* ------------------------------------------------------------------ */
+parser code {:
+
+    public void syntax_error(Symbol s) {
+        String texto = (s.value != null) ? s.value.toString() : "fin de archivo";
+        Salida.error("ERROR SINTACTICO (linea " + s.left + ", columna " + s.right
+                     + "): token inesperado '" + texto + "'");
+    }
+
+    // Ya se informo el error en syntax_error: solo se corta el analisis
+    public void report_fatal_error(String message, Object info) {
+        done_parsing();
+    }
+
+    public void report_error(String message, Object info) {
+        Salida.error("ERROR: " + message);
+    }
+:};
+
+/* ------------------------------------------------------------------ */
+/* Terminales (los mismos nombres que devuelve Lexico.flex)            */
+/* ------------------------------------------------------------------ */
+terminal DECLARE_SECTION, ENDDECLARE_SECTION, PROGRAM_SECTION, ENDPROGRAM_SECTION;
+terminal WHILE, ENDWHILE, IF, ENDIF, WRITE, PROMR;
+terminal TIPO_INTEGER, TIPO_FLOAT, TIPO_STRING;
+terminal OP_SUMA, OP_RESTA, OP_MULT, OP_DIV;
+terminal OP_AND, OP_OR;
+terminal OP_IGUAL, OP_DIFERENTE, OP_MENOR_IGUAL, OP_MAYOR_IGUAL, OP_MENOR, OP_MAYOR;
+terminal PAREN_IZQ, PAREN_DER, LLAVE_IZQ, LLAVE_DER, COR_IZQ, COR_DER;
+terminal PUNTO_COMA, COMA, ASIGNAR, ASIG_TIPO, DOS_PUNTOS;
+terminal String ID, INT, REAL, STRING;
+
+/* ------------------------------------------------------------------ */
+/* No terminales                                                       */
+/* ------------------------------------------------------------------ */
+non terminal pgm, bloque_declaracion, lista_declaracion, declaracion;
+non terminal lista_ids, lista_tipos, tipo;
+non terminal programa, lista_sentencias, sentencia;
+non terminal asignacion, iteracion, seleccion, escritura;
+non terminal lista_opcional, lista_constantes, constante;
+non terminal condicion, comparacion, comparador, promedio;
+non terminal expresion, termino, factor;
+
+start with pgm;
+
+/* ------------------------------------------------------------------ */
+/* Gramatica. Solo imprimen las reglas que "hacen algo" (pide el TP).  */
+/* Las reglas de paso (lista -> elemento, sentencia -> asignacion...)  */
+/* no imprimen nada.                                                   */
+/* ------------------------------------------------------------------ */
+
+pgm ::= bloque_declaracion programa
+        {: Salida.println("Regla: programa completo"); :}
+      ;
+
+bloque_declaracion ::= DECLARE_SECTION lista_declaracion ENDDECLARE_SECTION
+        {: Salida.println("Regla: bloque de declaraciones"); :}
+      ;
+
+lista_declaracion ::= lista_declaracion declaracion
+                    | declaracion
+                    ;
+
+declaracion ::= COR_IZQ lista_ids COR_DER ASIG_TIPO COR_IZQ lista_tipos COR_DER
+        {: Salida.println("Regla: declaracion de variables"); :}
+              /* TODO paso 5: comparar cantidad de ids y de tipos, cargar tipos en la TS */
+      ;
+
+lista_ids ::= lista_ids COMA ID
+            | ID
+            ;
+
+lista_tipos ::= lista_tipos COMA tipo
+              | tipo
+              ;
+
+tipo ::= TIPO_STRING
+       | TIPO_INTEGER
+       | TIPO_FLOAT
+       ;
+
+programa ::= PROGRAM_SECTION lista_sentencias ENDPROGRAM_SECTION
+        {: Salida.println("Regla: bloque de programa"); :}
+      ;
+
+lista_sentencias ::= lista_sentencias sentencia
+                   | sentencia
+                   ;
+
+sentencia ::= asignacion
+            | iteracion
+            | seleccion
+            | escritura
+            ;
+
+asignacion ::= ID ASIGNAR expresion
+        {: Salida.println("Regla: asignacion de expresion"); :}
+             | ID ASIGNAR STRING
+        {: Salida.println("Regla: asignacion de string"); :}
+             | ID ASIGNAR promedio
+        {: Salida.println("Regla: asignacion de PROMR"); :}
+             /* TODO paso 5: variable declarada y tipos compatibles */
+      ;
+
+iteracion ::= WHILE PAREN_IZQ condicion PAREN_DER lista_sentencias ENDWHILE
+        {: Salida.println("Regla: WHILE"); :}
+      ;
+
+seleccion ::= IF PAREN_IZQ condicion PAREN_DER lista_sentencias ENDIF
+        {: Salida.println("Regla: IF"); :}
+      ;
+
+escritura ::= WRITE STRING
+        {: Salida.println("Regla: WRITE de string"); :}
+            | WRITE ID
+        {: Salida.println("Regla: WRITE de variable"); :}
+            | WRITE INT
+        {: Salida.println("Regla: WRITE de entero"); :}
+            | WRITE REAL
+        {: Salida.println("Regla: WRITE de real"); :}
+      ;
+
+promedio ::= PROMR PAREN_IZQ ID PUNTO_COMA OP_MENOR_IGUAL PUNTO_COMA
+             COR_IZQ lista_opcional COR_DER PAREN_DER
+        {: Salida.println("Regla: PROMR"); :}
+      ;
+
+lista_opcional ::= /* vacio */
+                   /* TODO: aca se puede emitir "La lista esta vacia" si la catedra lo pide en esta entrega */
+                 | lista_constantes
+                 ;
+
+lista_constantes ::= lista_constantes COMA constante
+                   | constante
+                   ;
+
+constante ::= INT
+            | REAL
+            ;
+
+condicion ::= comparacion
+        {: Salida.println("Regla: condicion simple"); :}
+            | PAREN_IZQ comparacion PAREN_DER OP_AND PAREN_IZQ comparacion PAREN_DER
+        {: Salida.println("Regla: condicion con AND"); :}
+            | PAREN_IZQ comparacion PAREN_DER OP_OR PAREN_IZQ comparacion PAREN_DER
+        {: Salida.println("Regla: condicion con OR"); :}
+      ;
+
+comparacion ::= expresion comparador expresion
+        {: Salida.println("Regla: comparacion"); :}
+      ;
+
+comparador ::= OP_MAYOR
+             | OP_MENOR
+             | OP_IGUAL
+             | OP_MAYOR_IGUAL
+             | OP_MENOR_IGUAL
+             | OP_DIFERENTE
+             ;
+
+expresion ::= expresion OP_SUMA termino
+        {: Salida.println("Regla: suma"); :}
+            | expresion OP_RESTA termino
+        {: Salida.println("Regla: resta"); :}
+            | termino
+            ;
+
+termino ::= termino OP_MULT factor
+        {: Salida.println("Regla: multiplicacion"); :}
+          | termino OP_DIV factor
+        {: Salida.println("Regla: division"); :}
+          | factor
+          ;
+
+factor ::= PAREN_IZQ expresion PAREN_DER
+         | ID
+         | INT
+         | REAL
+         ;

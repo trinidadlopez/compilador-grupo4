@@ -1,0 +1,12 @@
+NOMBRE                             TOKEN     TIPO  VALOR                              LONG  
+a                                  ID              _                                  _     
+b                                  ID              _                                  _     
+s                                  ID              _                                  _     
+_3.9                               CTE_F     _     3.9                                _     
+_holaaa!!!                         CTE_STR   _     holaaa!!!                          9     
+_10                                CTE_E     _     10                                 _     
+_1                                 CTE_E     _     1                                  _     
+r                                  ID              _                                  _     
+x                                  ID              _                                  _     
+_2                                 CTE_E     _     2                                  _     
+_3                                 CTE_E     _     3                                  _     

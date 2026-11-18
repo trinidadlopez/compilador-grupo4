@@ -1,0 +1,12 @@
+DECLARE.SECTION
+[a, b] := [FLOAT, INTEGER]
+[s] := [STRING]
+ENDDECLARE.SECTION
+PROGRAM.SECTION
+a ::= 3.9
+s ::= "holaaa!!!"
+WHILE (a < 10)
+  a ::= a + 1
+ENDWHILE
+r ::= PROMR(x; <=; [1, 2, 3])
+ENDPROGRAM.SECTION
